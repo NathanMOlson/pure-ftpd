@@ -3867,7 +3867,12 @@ static int ul_dowrite(ULHandler * const ulhandler, const unsigned char *buf_,
     if (ret < 0) {
         *uploaded = 0;
     } else {
-        *uploaded = size;
+        ret = fdatasync(ulhandler->f);
+        if (ret < 0) {
+            *uploaded = 0;
+        } else {
+            *uploaded = size;
+        }
     }
     return ret;
 }
